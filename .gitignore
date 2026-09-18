@@ -1,0 +1,16 @@
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfplan
+.terraform.lock.hcl
+terraform.tfvars
+*.auto.tfvars
+*.log
+.DS_Store
+Thumbs.db
+
+# Raw/private evidence must be reviewed and sanitized before anything is committed.
+evidence/raw/
+evidence/private/

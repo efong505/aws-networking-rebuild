@@ -1,0 +1,20 @@
+aws_region   = "us-west-2"
+project_name = "aws-networking-rebuild"
+
+vpc_cidr = "10.42.0.0/16"
+
+public_subnet_cidrs = [
+  "10.42.0.0/24",
+  "10.42.1.0/24"
+]
+
+private_subnet_cidrs = [
+  "10.42.10.0/24",
+  "10.42.11.0/24"
+]
+
+# Cost controls: leave false for initial baseline.
+enable_nat_gateways  = false
+enable_test_instance = false
+
+flow_log_retention_days = 7
