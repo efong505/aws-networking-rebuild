@@ -1,16 +1,16 @@
 # Phase 1 Validation Evidence
 
-**Status:** Not yet performed.
+**Status:** Pre-apply validation complete; deployment not yet performed
 
 Use this file for concise, sanitized evidence after deployment. Do not paste unreviewed AWS CLI output.
 
 ## Terraform baseline
 
-- Date performed:
-- `terraform fmt -recursive -check`:
-- `terraform validate`:
-- Plan reviewed before apply:
-- Apply result:
+- Date performed: 2026-09-18
+- `terraform fmt -recursive -check`: PASS
+- `terraform validate`: PASS
+- Plan reviewed before apply: Success! The configuration is valid.
+- Apply result: Not yet performed.
 
 ## VPC / subnet / routing validation
 
