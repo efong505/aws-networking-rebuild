@@ -1,6 +1,6 @@
 # Phase 1 Validation Evidence
 
-**Status:** Pre-apply validation complete; deployment not yet performed
+**Status:** Deployed; healthy baseline validation in progress
 
 Use this file for concise, sanitized evidence after deployment. Do not paste unreviewed AWS CLI output.
 
@@ -9,35 +9,35 @@ Use this file for concise, sanitized evidence after deployment. Do not paste unr
 - Date performed: 2026-09-18
 - `terraform fmt -recursive -check`: PASS
 - `terraform validate`: PASS
-- Plan reviewed before apply: Success! The configuration is valid.
-- Apply result: Not yet performed.
+- Plan reviewed before apply: PASS — 27 to add, 0 to change, 0 to destroy
+- Apply result: PASS — 27 added, 0 changed, 0 destroyed
 
 ## VPC / subnet / routing validation
 
-- Two AZs confirmed:
-- Public subnet associations confirmed:
-- Private subnet associations confirmed:
-- Public `0.0.0.0/0 -> IGW` route confirmed:
-- Private subnets have no direct IGW route:
+- Two AZs confirmed: PASS
+- Public subnet associations confirmed: PASS
+- Private subnet associations confirmed: PASS
+- Public `0.0.0.0/0 -> IGW` route confirmed: PASS
+- Private subnets have no direct IGW route: PASS
 
 ## S3 Gateway Endpoint
 
-- Endpoint type confirmed:
-- Both private route tables associated:
-- S3 prefix-list routes observed:
+- Endpoint type confirmed: Gateway
+- Both private route tables associated: PASS
+- S3 prefix-list routes observed: PASS
 
 ## Systems Manager Interface Endpoints
 
-- `ssm` endpoint validated:
-- `ssmmessages` endpoint validated:
-- Private DNS validated:
-- Endpoint SG TCP/443 behavior validated:
+- `ssm` endpoint validated: PASS
+- `ssmmessages` endpoint validated: PASS
+- Private DNS validated: PASS
+- Endpoint SG TCP/443 behavior validated: PASS
 
 ## Flow Logs
 
-- Flow Log active:
-- CloudWatch destination confirmed:
-- Traffic records observed:
+- Flow Log active: PASS
+- CloudWatch destination confirmed: PASS
+- Traffic records observed: Pending traffic generation
 
 ## Optional bounded test window
 

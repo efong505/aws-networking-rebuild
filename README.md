@@ -22,6 +22,19 @@ This project serves three connected purposes:
 
 The governing career direction is Cloud Infrastructure / Platform Engineering / Production Systems. The repository is designed to show architecture judgment and troubleshooting discipline without inflating lab work into employer production experience.
 
+## Terraform layout
+
+This project intentionally separates Terraform resources by responsibility rather than using a single `main.tf`.
+
+Terraform automatically loads all `.tf` files in the working directory as one configuration.
+
+- `network.tf` — VPC, subnets, routing, NACLs, and security groups
+- `endpoints.tf` — S3 and Systems Manager VPC endpoints
+- `flow-logs.tf` — VPC Flow Logs and CloudWatch integration
+- `ssm-test-instance.tf` — optional private validation instance
+- `variables.tf` — input variables
+- `outputs.tf` — exported resource information
+
 ## Phase 1 architecture
 
 Prepared Phase 1 scope:
