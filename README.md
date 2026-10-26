@@ -141,6 +141,24 @@ Each drill uses:
 
 **symptom → hypothesis → evidence checked → root cause → fix → prevention**
 
+## Visual learning / AWS Console verification
+
+Terraform remains the source of truth, and AWS CLI/API checks remain the reproducible validation mechanism. This project also includes an optional AWS Console visual-verification layer for mapping IaC resources to what AWS actually shows.
+
+Default workflow mode: **GUI ASK**.
+
+Supported modes:
+
+- **GUI ASK** — offer the Console walkthrough at meaningful checkpoints.
+- **GUI ALWAYS** — include the walkthrough automatically.
+- **GUI OFF** — Terraform/CLI only.
+- **SHOW GUI** — one-time visual walkthrough.
+- **SKIP GUI** — skip one visual checkpoint.
+
+Console walkthroughs are read-only by default. Do not manually change Terraform-managed resources unless a step is explicitly designated as a drift/failure exercise.
+
+See [`docs/aws-console-visual-guide.md`](docs/aws-console-visual-guide.md).
+
 ## Repository structure
 
 ```text
@@ -163,6 +181,7 @@ Each drill uses:
 │   └── 99-destroy.ps1
 └── docs/
     ├── architecture-decisions.md
+    ├── aws-console-visual-guide.md
     ├── validation-checklist.md
     ├── validation-evidence.md
     ├── failure-drills.md
@@ -225,6 +244,8 @@ Review [`docs/cost-control.md`](docs/cost-control.md) before enabling those reso
 The project is not considered implemented merely because Terraform applies successfully.
 
 Before changing `IMPLEMENTATION_STATUS.md` to validated, complete [`docs/validation-checklist.md`](docs/validation-checklist.md) and record sanitized findings in [`docs/validation-evidence.md`](docs/validation-evidence.md).
+
+When visual learning is enabled, use [`docs/aws-console-visual-guide.md`](docs/aws-console-visual-guide.md) after the corresponding Terraform/CLI checkpoint. Console confirmation is supplemental and does not replace reproducible validation.
 
 Do **not** commit:
 
