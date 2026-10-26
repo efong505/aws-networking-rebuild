@@ -39,6 +39,20 @@ Use this file for concise, sanitized evidence after deployment. Do not paste unr
 - CloudWatch destination confirmed: PASS
 - Traffic records observed: Pending traffic generation
 
+## Optional visual verification
+
+Visual verification is supplemental learning/evidence and does not replace Terraform/CLI validation.
+
+- Visual-learning mode used:
+- AWS Console walkthrough performed:
+- VPC/subnet layout visually confirmed:
+- Route-table behavior visually confirmed:
+- S3 Gateway vs SSM Interface endpoint types visually confirmed:
+- Flow Log / CloudWatch relationship visually confirmed:
+- Notes:
+
+See `docs/aws-console-visual-guide.md` for the read-only walkthrough.
+
 ## Optional bounded test window
 
 - Private EC2 instance had no public IPv4:
