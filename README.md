@@ -6,9 +6,9 @@ Employer-facing AWS networking portfolio project built with Terraform to demonst
 
 ## Current implementation status
 
-**Phase 1 — Two-AZ VPC Foundation: implementation prepared; deployment and validation pending.**
+**Phase 1 — Two-AZ VPC Foundation: deployed, validated, controlled break/fix drills completed, and infrastructure destroyed. Public-readiness review pending.**
 
-The Terraform source is ready for local validation and controlled deployment. Until the healthy baseline is actually applied and validated, this README intentionally describes the design as **prepared/planned**, not completed evidence.
+The Terraform source remains available for controlled reproduction; the lab is no longer running. The completed networking and recovery tests are recorded in [validation evidence](docs/validation-evidence.md) and the [troubleshooting log](docs/troubleshooting-log.md). Phase 2 is still planned.
 
 See [`IMPLEMENTATION_STATUS.md`](IMPLEMENTATION_STATUS.md) for the authoritative project-state boundary.
 
@@ -37,7 +37,7 @@ Terraform automatically loads all `.tf` files in the working directory as one co
 
 ## Phase 1 architecture
 
-Prepared Phase 1 scope:
+Implemented and validated Phase 1 scope (resources subsequently destroyed):
 
 - 1 VPC (`10.42.0.0/16` by default)
 - 2 Availability Zones
@@ -109,7 +109,7 @@ flowchart TB
     FLOW --- CW
 ```
 
-## What Phase 1 is designed to demonstrate
+## What Phase 1 demonstrated
 
 ### Architecture
 
@@ -130,12 +130,12 @@ flowchart TB
 
 ### Troubleshooting
 
-After the healthy baseline is validated, the project deliberately introduces controlled faults around:
+After validating the healthy baseline, the project deliberately reproduced and recovered two faults:
 
-- private-subnet internet egress;
-- route-table association;
-- interface-endpoint security-group rules;
-- NACL/stateless return-path behavior.
+- removing a private subnet's NAT default route, which blocked external HTTPS while S3 Gateway Endpoint access remained available;
+- revoking the private EC2 security group's outbound allow rule, which reproduced egress failure (user-confirmed; raw command output not retained).
+
+Other suggested drills remain unperformed.
 
 Each drill uses:
 
@@ -243,7 +243,7 @@ Review [`docs/cost-control.md`](docs/cost-control.md) before enabling those reso
 
 The project is not considered implemented merely because Terraform applies successfully.
 
-Before changing `IMPLEMENTATION_STATUS.md` to validated, complete [`docs/validation-checklist.md`](docs/validation-checklist.md) and record sanitized findings in [`docs/validation-evidence.md`](docs/validation-evidence.md).
+Phase 1 has been validated and the sanitized findings are recorded in [`docs/validation-evidence.md`](docs/validation-evidence.md). The original [`docs/validation-checklist.md`](docs/validation-checklist.md) remains a reproduction checklist, not a claim that every optional item was executed.
 
 When visual learning is enabled, use [`docs/aws-console-visual-guide.md`](docs/aws-console-visual-guide.md) after the corresponding Terraform/CLI checkpoint. Console confirmation is supplemental and does not replace reproducible validation.
 
@@ -259,9 +259,9 @@ Do **not** commit:
 
 ## Phase 1 failure-recovery evidence
 
-Do not inject faults before the healthy baseline is captured.
+The healthy baseline was captured before the two performed fault injections.
 
-Then use [`docs/failure-drills.md`](docs/failure-drills.md) and record performed drills in [`docs/troubleshooting-log.md`](docs/troubleshooting-log.md).
+The performed drills are recorded in [`docs/troubleshooting-log.md`](docs/troubleshooting-log.md); [`docs/failure-drills.md`](docs/failure-drills.md) also contains proposed drills that were not executed.
 
 ## Teardown
 
@@ -270,11 +270,11 @@ Set-Location .\terraform
 ..\scripts\99-destroy.ps1 -Profile ekewaka
 ```
 
-After teardown, independently verify that no lab NAT Gateways, EIPs, interface endpoints, EC2 instances, or other billable lab resources remain.
+**Completed teardown:** Terraform destroy was executed; subsequent CLI checks showed both NAT Gateways deleted, the test EC2 terminated, the VPC absent, and Terraform state empty. The remaining CloudWatch Log Group was subsequently deleted according to the owner, without a preserved independent final lookup. A comprehensive audit of all possible residual billable resources is not claimed.
 
 ## Phase 2 roadmap
 
-After Phase 1 is validated, this same repository is intended to expand with:
+**Planned, not implemented:** This repository may expand with:
 
 - second VPC;
 - VPC Peering;
@@ -289,7 +289,7 @@ Planned Phase 2 work must remain labeled **planned** until actually performed.
 
 ## What this demonstrates
 
-When Phase 1 evidence is complete, the repository is intended to demonstrate:
+Completed Phase 1 evidence demonstrates:
 
 - Terraform-based AWS networking implementation;
 - multi-AZ subnet/routing architecture;
