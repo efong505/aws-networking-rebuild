@@ -141,23 +141,13 @@ Each drill uses:
 
 **symptom → hypothesis → evidence checked → root cause → fix → prevention**
 
-## Visual learning / AWS Console verification
+## AWS Console Verification
 
-Terraform remains the source of truth, and AWS CLI/API checks remain the reproducible validation mechanism. This project also includes an optional AWS Console visual-verification layer for mapping IaC resources to what AWS actually shows.
+Terraform was the source of truth, with AWS CLI/API checks used to validate infrastructure configuration and network behavior.
 
-Default workflow mode: **GUI ASK**.
+The AWS Management Console provided an optional visual reference for inspecting VPC architecture, routing, security groups, endpoints, and Flow Logs.
 
-Supported modes:
-
-- **GUI ASK** — offer the Console walkthrough at meaningful checkpoints.
-- **GUI ALWAYS** — include the walkthrough automatically.
-- **GUI OFF** — Terraform/CLI only.
-- **SHOW GUI** — one-time visual walkthrough.
-- **SKIP GUI** — skip one visual checkpoint.
-
-Console walkthroughs are read-only by default. Do not manually change Terraform-managed resources unless a step is explicitly designated as a drift/failure exercise.
-
-See [`docs/aws-console-visual-guide.md`](docs/aws-console-visual-guide.md).
+See the [AWS Console Visual Verification Guide](docs/aws-console-visual-guide.md) for inspection procedures.
 
 ## Repository structure
 
