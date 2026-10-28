@@ -10,7 +10,7 @@ mock_provider "aws" {
 run "disabled_by_default" {
   command = plan
   assert {
-    condition     = length(aws_vpc.lab) == 0 && length(aws_instance.host) == 0 && length(aws_route53_zone.lab) == 0 && length(aws_vpc_endpoint.ssm) == 0
+    condition     = length(aws_vpc.lab) == 0 && length(aws_instance.host) == 0 && length(aws_route53_zone.lab) == 0 && length(aws_vpc_endpoint.ssm) == 0 && length(aws_route53_record.negative_cache) == 0
     error_message = "Default configuration must not provision lab resources."
   }
 }
@@ -19,7 +19,7 @@ run "network_only" {
   command = plan
   variables { deploy_lab = true }
   assert {
-    condition     = length(aws_vpc.lab) == 2 && length(aws_route.peer) == 2 && length(aws_instance.host) == 0 && length(aws_vpc_endpoint.ssm) == 0
+    condition     = length(aws_vpc.lab) == 2 && length(aws_route.peer) == 2 && length(aws_instance.host) == 0 && length(aws_vpc_endpoint.ssm) == 0 && length(aws_route53_record.negative_cache) == 1
     error_message = "Network-only gate must keep EC2 and endpoints disabled."
   }
 }
@@ -43,7 +43,7 @@ run "private_validation_topology" {
     error_message = "Both directions require the peer CIDR, not a default route."
   }
   assert {
-    condition     = length(aws_route53_zone.lab[0].vpc) == 2 && aws_vpc_peering_connection_options.dns[0].requester[0].allow_remote_vpc_dns_resolution && aws_vpc_peering_connection_options.dns[0].accepter[0].allow_remote_vpc_dns_resolution
+    condition     = aws_route53_record.negative_cache[0].ttl == 60 && endswith(one(aws_route53_record.negative_cache[0].records), " 60") && length(aws_route53_zone.lab[0].vpc) == 2 && aws_vpc_peering_connection_options.dns[0].requester[0].allow_remote_vpc_dns_resolution && aws_vpc_peering_connection_options.dns[0].accepter[0].allow_remote_vpc_dns_resolution
     error_message = "DNS requires two PHZ associations and bilateral peering options."
   }
 }

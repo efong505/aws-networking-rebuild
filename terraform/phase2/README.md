@@ -2,7 +2,7 @@
 
 ## Status and boundaries
 
-Source implemented; local validation recorded in docs/phase2-evidence.md. AWS deployment, connectivity, DNS, drills and teardown are NOT performed yet. This directory is a separate Terraform root/state, not an extension of the destroyed Phase 1 state. Both phases remain in this repository. No production resources are referenced.
+Core Phase 2 was deployed, connectivity/DNS validated, route and missing-record failure/recovery observed, and infrastructure destroyed. See [actual evidence and qualifications](../../docs/phase2-evidence.md), including inconclusive association tests and the exceeded session time limit. The procedures below are for reproduction; they do not authorize another deployment. This directory is a separate Terraform root/state, not an extension of the destroyed Phase 1 state. Both phases remain in this repository. No production resources are referenced.
 
 Two nonoverlapping VPCs (10.52/16 and 10.53/16), one private subnet each in the same AZ, accepted same-account/same-region peering, reciprocal specific routes, bilateral DNS options, and a Route 53 private zone associated with both VPCs. Optional private AL2023 hosts use local SSM endpoints, encrypted disposable disks and IMDSv2. ICMP is allowed only from/to the peer subnet; management HTTPS remains local. No SSH, public IPv4, IGW, NAT, TGW, load balancer or Resolver endpoints. Default NACLs are used in this phase; no custom NACL drill is claimed.
 
@@ -13,8 +13,8 @@ References: [AWS peering behavior](https://docs.aws.amazon.com/vpc/latest/peerin
 ## Staged gates
 
 1. Local: fmt, init, validate and mocked Terraform tests. No AWS credentials are needed for mocked tests. Terraform >=1.7 is required for mocks (implementation supports >=1.6).
-2. Read-only preflight: select profile/account privately, check region/permissions, existing CIDR overlap, quotas, and no conflicting phase2.internal namespace. Set an owner, approved spend allowance, teardown deadline and responsible operator. Read-only plan is permitted; apply is not.
-3. Review plan: expected full scope is 28 managed resources: 2 VPCs, 2 subnets, 2 route tables, 2 associations, 1 peering, 1 DNS-options resource, 2 reciprocal routes, 4 SGs, 4 endpoints, 1 role, 1 attachment, 1 instance profile, 2 EC2s, 1 private zone and 2 DNS records. Reject unrelated changes/deletes, public addressing, NAT/TGW or unexpected resources. Refresh/re-review the plan if inputs/code/account change.
+2. Read-only preflight: select profile/account privately, check region/permissions, existing CIDR overlap, quotas, and no conflicting phase2.internal namespace. Set an owner, approved spend allowance, teardown deadline and responsible operator. Before any future billable apply, install and verify an expiration/cleanup mechanism independent of chat continuation, and reserve a cleanup buffer. Do not rely on a chat turn or background DNS probe to guarantee teardown. Read-only plan is permitted; apply is not.
+3. Review plan: expected full scope is 29 managed resources: 2 VPCs, 2 subnets, 2 route tables, 2 associations, 1 peering, 1 DNS-options resource, 2 reciprocal routes, 4 SGs, 4 endpoints, 1 role, 1 attachment, 1 instance profile, 2 EC2s, 1 private zone, 2 A records and 1 managed SOA record. Reject unrelated changes/deletes, public addressing, NAT/TGW or unexpected resources. Refresh/re-review the plan if inputs/code/account change.
 4. User approval: proposed maximum 60-minute lab window and $5 spend allowance; this is an operating limit, not an automatic billing cap. No costs are authorized by repository changes. Confirm profile/account, final regional estimate and exact plan before applying.
 5. Apply the reviewed saved plan, wait for both instances to be SSM Online, run baseline checks below. Stop if management access does not become healthy; diagnose or destroy within the window.
 6. After healthy baseline, perform one controlled fault at a time, restore, retest and reconcile Terraform. Record actual observations.
@@ -39,6 +39,9 @@ Do not invoke parent Phase 1 apply scripts here. Saved plans, state, raw outputs
 
 ## Healthy baseline / DNS validation
 
+A repeatable probe is available from the repository root: scripts/phase2-probe.ps1 -Profile <approved-lab-profile>. It checks that both targets match the private lab instances before sending fixed SSM commands, then requires both direct DNS and host lookup plus both IP/name pings to pass. Raw output is written only under ignored vidence/private/. Do not run it during a Terraform operation. It provisions nothing and requires an already approved live lab.
+
+
 Using `aws ssm start-session --target <instance-id>` (or SSM Run Command with AWS-RunShellScript), on A run:
 
 ```sh
@@ -51,10 +54,11 @@ On B run the corresponding `a.phase2.internal` and A private IP tests. Record ex
 
 Console checkpoint (optional GUI ASK): VPC → Peering connections → phase2-a-b; inspect status, requester/accepter and DNS settings. Route tables → phase2-a/b-private; inspect association and peer CIDR route. Route 53 → Hosted zones → phase2.internal; inspect VPC associations and A records. Observational only, except the deliberate drill below. A recorded walkthrough is required before claiming visual verification.
 
-## Controlled drills (planned, not performed)
+## Controlled drills and reproduction procedures
 
 - Missing reciprocal route: after baseline success, save B's peer route destination and peering ID privately. Remove ONLY B's 10.52.0.0/16 route via EC2 delete-route. A→B and B→A ping should fail due to loss of return/forward path; DNS can still resolve locally. Check both effective route tables before blaming SG/DNS. Restore with `terraform apply` of a reviewed repair plan, then rerun both directions and require no drift. Keep B's local SSM endpoints untouched so recovery remains available.
-- Private DNS isolation: after healthy baseline, detach only VPC B's PHZ association (retain A). Wait beyond the 30-second TTL/cache period. B's lookup of A should fail while ping to A's private IP still succeeds. Reassociate B through reviewed Terraform repair, recheck DNS and connectivity, require no drift. Peering DNS options do not share an unassociated private zone.
+- Private DNS isolation: after healthy baseline, detach only VPC B's PHZ association (retain A). Wait for the disassociation change to report `INSYNC`, then wait beyond the 30-second TTL/cache period. An accepted API request does not establish DNS propagation. B's lookup of A should fail while ping to A's private IP still succeeds. Reassociate B through reviewed Terraform repair, recheck DNS and connectivity, require no drift. Peering DNS options do not share an unassociated private zone.
+- Missing private DNS record: save the exact A-record set, delete only `a.phase2.internal` through a reviewed Route 53 change batch, wait for `INSYNC` and beyond its positive/negative TTLs, then query with `dig` and `getent` from B. Require DNS failure while ping to A's private IP succeeds. Restore with a reviewed Terraform plan containing only that A-record creation, then repeat bidirectional baseline and require no drift. The SOA TTL and minimum are both 60 seconds for this disposable lab; wait until that SOA setting is active before deleting records. An older cached NXDOMAIN can outlive the restored A record. See the evidence record for whether the observed run met these criteria.
 - Overlap: fixed nonoverlapping CIDRs are a design check, not a performed AWS failure drill. Never change CIDRs under a running lab for this exercise.
 
 For each actual drill: symptom → hypothesis → evidence → root cause → fix → prevention, date, operator, sanitized output and limitations. If baseline is unhealthy, do not inject faults. No Flow Logs were added to this minimal phase; do not claim packet/log evidence without separately approved instrumentation.

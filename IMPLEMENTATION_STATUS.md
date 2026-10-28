@@ -2,7 +2,7 @@
 
 This file is the authoritative employer-facing status boundary for this repository.
 
-## Current state — October 27, 2026
+## Current state — October 28, 2026
 
 **PHASE 1 FAILURE DRILLS VALIDATED — INFRASTRUCTURE DESTROYED — PUBLIC-READINESS REVIEW PENDING**
 
@@ -31,4 +31,4 @@ Independent hands-on production-like AWS networking/Terraform project, **not pro
 4. **PHASE 1 FAILURE DRILLS VALIDATED** — achieved with the evidence qualifications above.
 5. **PUBLIC-READINESS REVIEW PASSED** — **not yet established**.
 
-**Phase 2 source implemented in an isolated Terraform root; AWS deployment, connectivity/DNS validation, drills and teardown remain pending cost approval.** See [Phase 2 gate evidence](docs/phase2-evidence.md). Do not change repository visibility until a separate public-readiness decision.
+**Core Phase 2 deployed, validated and destroyed. Route and missing-record recovery observed; DNS-association attempts inconclusive. Approved session time limit exceeded; actual charges unverified. All 29 cleanup checks passed.** See [Phase 2 gate evidence](docs/phase2-evidence.md). Do not change repository visibility until a separate public-readiness decision.

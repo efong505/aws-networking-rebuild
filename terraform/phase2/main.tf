@@ -245,3 +245,15 @@ output "route_tables" {
 output "peering_id" {
   value = try(aws_vpc_peering_connection.lab[0].id, null)
 }
+
+# Bound negative caching before any future missing-record drill.
+# This manages the zone's existing SOA; it does not register a domain.
+resource "aws_route53_record" "negative_cache" {
+  count           = var.deploy_lab ? 1 : 0
+  zone_id         = aws_route53_zone.lab[0].zone_id
+  name            = aws_route53_zone.lab[0].name
+  type            = "SOA"
+  ttl             = 60
+  allow_overwrite = true
+  records         = ["ns-1536.awsdns-00.co.uk. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 60"]
+}
