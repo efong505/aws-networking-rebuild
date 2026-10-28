@@ -8,7 +8,7 @@ Employer-facing AWS networking portfolio project built with Terraform to demonst
 
 **Phase 1 — Two-AZ VPC Foundation: deployed, validated, controlled break/fix drills completed, and infrastructure destroyed. Public-readiness review pending.**
 
-The Terraform source remains available for controlled reproduction; the lab is no longer running. The completed networking and recovery tests are recorded in [validation evidence](docs/validation-evidence.md) and the [troubleshooting log](docs/troubleshooting-log.md). Phase 2 is still planned.
+The Terraform source remains available for controlled reproduction; the lab is no longer running. The completed networking and recovery tests are recorded in [validation evidence](docs/validation-evidence.md) and the [troubleshooting log](docs/troubleshooting-log.md). Phase 2 source preparation is available in [the isolated lab](terraform/phase2/README.md); live AWS validation is pending.
 
 See [`IMPLEMENTATION_STATUS.md`](IMPLEMENTATION_STATUS.md) for the authoritative project-state boundary.
 
@@ -264,7 +264,7 @@ Set-Location .\terraform
 
 ## Phase 2 roadmap
 
-**Planned, not implemented:** This repository may expand with:
+**Source prepared, AWS deployment and validation pending:** See [Phase 2 implementation/runbook](terraform/phase2/README.md) and [gate evidence](docs/phase2-evidence.md). The following roadmap is not a claim of performed AWS work:
 
 - second VPC;
 - VPC Peering;

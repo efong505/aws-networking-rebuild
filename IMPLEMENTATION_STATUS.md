@@ -31,4 +31,4 @@ Independent hands-on production-like AWS networking/Terraform project, **not pro
 4. **PHASE 1 FAILURE DRILLS VALIDATED** — achieved with the evidence qualifications above.
 5. **PUBLIC-READINESS REVIEW PASSED** — **not yet established**.
 
-**Phase 2 remains planned and unimplemented.** Do not change repository visibility until a separate public-readiness decision.
+**Phase 2 source implemented in an isolated Terraform root; AWS deployment, connectivity/DNS validation, drills and teardown remain pending cost approval.** See [Phase 2 gate evidence](docs/phase2-evidence.md). Do not change repository visibility until a separate public-readiness decision.
