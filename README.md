@@ -8,7 +8,7 @@ Employer-facing AWS networking portfolio project built with Terraform to demonst
 
 **Phase 1 — Two-AZ VPC Foundation: deployed, validated, controlled break/fix drills completed, and infrastructure destroyed. Public-readiness review pending.**
 
-The Terraform source remains available for controlled reproduction; the lab is no longer running. The completed networking and recovery tests are recorded in [validation evidence](docs/validation-evidence.md) and the [troubleshooting log](docs/troubleshooting-log.md). Phase 2 is still planned.
+The Terraform source remains available for controlled reproduction; the lab is no longer running. The completed networking and recovery tests are recorded in [validation evidence](docs/validation-evidence.md) and the [troubleshooting log](docs/troubleshooting-log.md). Core Phase 2 is also deployed, validated and destroyed; see [Phase 2 evidence and qualifications](docs/phase2-evidence.md).
 
 See [`IMPLEMENTATION_STATUS.md`](IMPLEMENTATION_STATUS.md) for the authoritative project-state boundary.
 
@@ -262,20 +262,11 @@ Set-Location .\terraform
 
 **Completed teardown:** Terraform destroy was executed; subsequent CLI checks showed both NAT Gateways deleted, the test EC2 terminated, the VPC absent, and Terraform state empty. The remaining CloudWatch Log Group was subsequently deleted according to the owner, without a preserved independent final lookup. A comprehensive audit of all possible residual billable resources is not claimed.
 
-## Phase 2 roadmap
+## Phase 2 — multi-VPC lab completed and destroyed
 
-**Planned, not implemented:** This repository may expand with:
+Implemented in [a separate Terraform root](terraform/phase2/README.md): two nonoverlapping private VPCs, accepted peering, reciprocal routes, two SSM-managed private test hosts and a private DNS zone associated with both VPCs. Bidirectional private-IP and custom-name connectivity passed. A missing return route caused packet loss and was repaired; deleting an A record produced a host lookup failure while IP connectivity worked. DNS recovery exposed negative caching; the lab now manages a bounded SOA negative-cache TTL.
 
-- second VPC;
-- VPC Peering;
-- reciprocal routing;
-- private connectivity tests;
-- cross-VPC DNS validation;
-- Route 53 private hosted zone / resolver concepts;
-- PrivateLink comparison;
-- Transit Gateway design and cost-controlled validation/modeling.
-
-Planned Phase 2 work must remain labeled **planned** until actually performed.
+[Evidence](docs/phase2-evidence.md) records successful final checks and teardown, inconclusive DNS-association failure attempts, and the exceeded approved time window. All 29 cleanup checks passed; actual billed charges remain unverified. Transit Gateway, custom PrivateLink services and hybrid Resolver implementations remain design comparisons, not deployed claims. Public-readiness approval remains separate.
 
 ## What this demonstrates
 

@@ -14,3 +14,6 @@ Thumbs.db
 # Raw/private evidence must be reviewed and sanitized before anything is committed.
 evidence/raw/
 evidence/private/
+
+# Phase 2 uses a separately reviewed provider lock for reproducibility.
+!terraform/phase2/.terraform.lock.hcl
